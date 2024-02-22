@@ -6,4 +6,14 @@ module.exports = {
   // static: {
   //   enable: true,
   // }
+  jwt: {
+    enable: true,
+    package: 'egg-jwt',
+  },
+
+  // config/plugin.js
+  mysql: {
+    enable: true,
+    package: 'egg-mysql',
+  },
 };

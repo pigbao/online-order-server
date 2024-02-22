@@ -5,10 +5,20 @@ class BaseController extends Controller {
   //   return this.ctx.session.user;
   // }
 
+  // 成功返回
   success(data) {
     this.ctx.body = {
       code: 200,
       data,
+    };
+  }
+
+  // 错误返回
+  error(msg, data = {}) {
+    this.ctx.body = {
+      code: 500,
+      data,
+      msg,
     };
   }
 
