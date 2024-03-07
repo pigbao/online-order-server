@@ -26,7 +26,7 @@ module.exports = appInfo => {
 
   // 全局配置jwt
   config.jwt = {
-    secret: '22', //这个是加密秘钥，自行添加
+    secret: '22', // 这个是加密秘钥，自行添加
   };
 
   // config/config.${env}.js
