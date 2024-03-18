@@ -1,7 +1,7 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
-
+const path = require('path');
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -24,9 +24,24 @@ module.exports = appInfo => {
     },
   };
 
+  config.multipart = {
+    mode: 'file',
+  };
+
   // 全局配置jwt
   config.jwt = {
     secret: '22', // 这个是加密秘钥，自行添加
+  };
+
+  // 配置静态文件目录
+  config.static = {
+    prefix: '/public/', // 这里的 prefix 应该和返回的 URL 匹配
+    dir: path.join(appInfo.baseDir, 'app/public'),
+    // 配置静态资源中间件
+    dynamic: true,
+    preload: false,
+    maxAge: 31536000,
+    buffer: true,
   };
 
   // config/config.${env}.js
