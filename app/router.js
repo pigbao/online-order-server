@@ -10,5 +10,8 @@ module.exports = app => {
 
 
   router.post('/upload', middleware.jwt(), controller.upload.upload);
+
+
   router.get('/getUserInfo', middleware.jwt(), controller.user.getUserInfo);
+  router.post('/user/add', middleware.jwt(), controller.user.add);
 };

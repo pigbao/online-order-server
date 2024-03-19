@@ -65,6 +65,9 @@ module.exports = appInfo => {
     agent: false,
   };
 
+  config.validate = {
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

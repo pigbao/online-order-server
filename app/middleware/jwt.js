@@ -7,7 +7,7 @@ module.exports = () => {
   return async function(ctx, next) {
     if (!whiteList.some(item => item === ctx.request.url)) {
       // 判断接口路径是否在白名单
-      const token = ctx.request.header.token; // 拿到token
+      const token = ctx.request.header.authorization; // 拿到token
       if (token) {
         try {
           const decoded = ctx.app.jwt.verify(token, ctx.app.config.jwt.secret); // 解密token
@@ -19,7 +19,7 @@ module.exports = () => {
           ctx.status = 401;
           ctx.body = {
             code: 401,
-            msg: '登录状态已过期，请重新登录',
+            msg: '登录状态已过期，请重新登录2',
           };
         }
       } else {
