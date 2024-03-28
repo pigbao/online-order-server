@@ -3,14 +3,14 @@
 const Controller = require('../core/base_controller');
 
 const createRule = {
-  username: [ 'required', 'string' ],
-  phone: [ 'required', 'string' ],
+  username: { type: 'string', min: 2 },
+  phone: 'string',
+  password: 'password',
 };
 
 class UserController extends Controller {
   async getUserInfo() {
     const { ctx } = this;
-    console.log('ctx.userId :>> ', ctx.userId);
     const res = ctx.service.user.find(ctx.userId);
     this.success(res);
   }
@@ -19,15 +19,28 @@ class UserController extends Controller {
   async add() {
     const { ctx } = this;
     try {
-      ctx.validate(createRule);
+      const params = ctx.request.body;
+      ctx.validate(createRule, params);
+      const res = await ctx.service.user.insert(params);
+      this.success(res);
     } catch (err) {
-      console.log('err :>> ', err);
       ctx.logger.warn(err.errors);
       this.error(err);
       return;
     }
-    const res = ctx.service.user.insert(ctx.userId);
-    this.success(res);
+  }
+
+  async query() {
+    const { ctx } = this;
+    try {
+      const params = ctx.request.query;
+      const res = await ctx.service.user.findPage(params);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
   }
 }
 

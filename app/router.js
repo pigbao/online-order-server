@@ -14,4 +14,5 @@ module.exports = app => {
 
   router.get('/getUserInfo', middleware.jwt(), controller.user.getUserInfo);
   router.post('/user/add', middleware.jwt(), controller.user.add);
+  router.get('/user/query', middleware.jwt(), controller.user.query);
 };
