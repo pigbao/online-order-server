@@ -13,7 +13,7 @@ class AuthController extends Controller {
       return this.error('用户名或密码错误！');
     }
     const token = await ctx.app.jwt.sign(
-      { openid: 123 },
+      { userId: user.id, username: user.username },
       ctx.app.config.jwt.secret,
       { expiresIn: '24h' }
     );
