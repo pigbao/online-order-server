@@ -3,25 +3,34 @@
 const Controller = require('../core/base_controller');
 
 const createRule = {
-  username: { type: 'string', min: 2 },
-  phone: 'string',
-  password: 'password',
+  roleName: { type: 'string', min: 2 },
 };
 
-class UserController extends Controller {
-  async getUserInfo() {
-    const { ctx } = this;
-    const res = ctx.service.user.find(ctx.userId);
-    this.success(res);
-  }
+const updateRule = {
+  id: { type: 'number' },
+};
 
-  // 新增用户
+class RoleController extends Controller {
+
   async add() {
     const { ctx } = this;
     try {
       const params = ctx.request.body;
       ctx.validate(createRule, params);
-      const res = await ctx.service.user.insert(params);
+      const res = await ctx.service.role.insert(params);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
+  async update() {
+    const { ctx } = this;
+    try {
+      const params = ctx.request.body;
+      ctx.validate(updateRule, params);
+      const res = await ctx.service.role.update(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -34,7 +43,7 @@ class UserController extends Controller {
     const { ctx } = this;
     try {
       const params = ctx.request.query;
-      const res = await ctx.service.user.findPage(params);
+      const res = await ctx.service.role.findList(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -47,7 +56,7 @@ class UserController extends Controller {
     const { ctx } = this;
     try {
       const { id } = ctx.request.query;
-      const res = await ctx.service.user.find(id);
+      const res = await ctx.service.role.find(id);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -57,4 +66,4 @@ class UserController extends Controller {
   }
 }
 
-module.exports = UserController;
+module.exports = RoleController;
