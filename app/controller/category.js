@@ -3,21 +3,22 @@
 const Controller = require('../core/base_controller');
 
 const createRule = {
-  roleName: { type: 'string', min: 2 },
+  categoryName: { type: 'string', min: 2 },
 };
 
 const updateRule = {
   id: { type: 'number' },
 };
 
-class RoleController extends Controller {
+class categoryController extends Controller {
 
   async add() {
     const { ctx } = this;
     try {
       const params = ctx.request.body;
+      console.log('params :>> ', params);
       ctx.validate(createRule, params);
-      const res = await ctx.service.role.insert(params);
+      const res = await ctx.service.category.insert(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -30,7 +31,7 @@ class RoleController extends Controller {
     try {
       const params = ctx.request.body;
       ctx.validate(updateRule, params);
-      const res = await ctx.service.role.update(params);
+      const res = await ctx.service.category.update(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -43,7 +44,7 @@ class RoleController extends Controller {
     const { ctx } = this;
     try {
       const params = ctx.request.query;
-      const res = await ctx.service.role.findList(params);
+      const res = await ctx.service.category.findList(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -56,7 +57,7 @@ class RoleController extends Controller {
     const { ctx } = this;
     try {
       const { id } = ctx.request.query;
-      const res = await ctx.service.role.find(id);
+      const res = await ctx.service.category.find(id);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -65,10 +66,11 @@ class RoleController extends Controller {
     }
   }
 
-  async all() {
+  async del() {
     const { ctx } = this;
     try {
-      const res = await ctx.service.role.findAll();
+      const { id } = ctx.request.query;
+      const res = await ctx.service.category.del(id);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -78,4 +80,4 @@ class RoleController extends Controller {
   }
 }
 
-module.exports = RoleController;
+module.exports = categoryController;

@@ -11,7 +11,7 @@ const createRule = {
 class UserController extends Controller {
   async getUserInfo() {
     const { ctx } = this;
-    const res = ctx.service.user.find(ctx.userId);
+    const res = await ctx.service.user.find(ctx.userId);
     this.success(res);
   }
 

@@ -36,5 +36,10 @@ class RoleService extends Service {
     const res = await this.app.mysql.query(sql, params);
     return res;
   }
+
+  async findAll() {
+    const res = await this.app.mysql.select('roles');
+    return res;
+  }
 }
 module.exports = RoleService;

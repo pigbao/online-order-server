@@ -13,7 +13,7 @@ module.exports = () => {
           const decoded = ctx.app.jwt.verify(token, ctx.app.config.jwt.secret); // 解密token
           if (decoded) {
             ctx.userId = decoded.userId; // 把openid存在ctx上，方便后续操作。
-            ctx.userName = decoded.userName;
+            ctx.username = decoded.username;
             await next();
           }
         } catch (error) {
