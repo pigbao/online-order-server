@@ -9,7 +9,7 @@ module.exports = app => {
   router.post('/login', controller.auth.login);
 
 
-  router.post('/upload', middleware.jwt(), controller.upload.upload);
+  router.post('/upload', controller.upload.upload);
 
 
   router.get('/user/getUserInfo', middleware.jwt(), controller.user.getUserInfo);
@@ -28,4 +28,11 @@ module.exports = app => {
   router.get('/goods/category/query', middleware.jwt(), controller.category.query);
   router.get('/goods/category/detail', middleware.jwt(), controller.category.detail);
   router.get('/goods/category/del', middleware.jwt(), controller.category.del);
+
+  router.post('/goods/add', middleware.jwt(), controller.goods.add);
+  router.post('/goods/update', middleware.jwt(), controller.goods.update);
+  router.get('/goods/query', middleware.jwt(), controller.goods.query);
+  router.get('/goods/detail', middleware.jwt(), controller.goods.detail);
+  router.get('/goods/del', middleware.jwt(), controller.goods.del);
+  router.get('/goods/changeShelves', middleware.jwt(), controller.goods.changeShelves);
 };
