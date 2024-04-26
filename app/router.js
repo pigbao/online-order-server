@@ -35,10 +35,17 @@ module.exports = app => {
   router.get('/goods/detail', middleware.jwt(), controller.goods.detail);
   router.get('/goods/del', middleware.jwt(), controller.goods.del);
   router.get('/goods/changeShelves', middleware.jwt(), controller.goods.changeShelves);
+  router.get('/goods/all', middleware.jwt(), controller.goods.allGoods);
 
   router.post('/shop/update', middleware.jwt(), controller.shop.update);
   router.get('/shop/detail', middleware.jwt(), controller.shop.detail);
 
+
+  router.post('/banner/add', middleware.jwt(), controller.banner.add);
+  router.post('/banner/update', middleware.jwt(), controller.banner.update);
+  router.get('/banner/query', middleware.jwt(), controller.banner.query);
+  router.get('/banner/detail', middleware.jwt(), controller.banner.detail);
+  router.get('/banner/del', middleware.jwt(), controller.banner.del);
 
   // router.post('/goods/add', middleware.jwt(), controller.goods.add);
   // router.post('/goods/update', middleware.jwt(), controller.goods.update);

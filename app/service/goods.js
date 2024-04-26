@@ -103,6 +103,17 @@ class goodsService extends Service {
     return res;
   }
 
+  async findAll() {
+    const res = await this.app.mysql.select('goods', {
+      where: { isDelete: 0 },
+      orders: [
+        [ 'createTime', 'DESC' ],
+        [ 'updateTime', 'DESC' ],
+      ],
+    });
+    return res;
+  }
+
   async del(id) {
     const res = await this.app.mysql.update('goods', {
       id,

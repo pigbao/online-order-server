@@ -105,6 +105,18 @@ class goodsController extends Controller {
       return;
     }
   }
+
+  async allGoods() {
+    const { ctx } = this;
+    try {
+      const res = await ctx.service.goods.findAll();
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
 }
 
 module.exports = goodsController;
