@@ -6,10 +6,18 @@ class shopService extends Service {
     return res;
   }
 
-  async update(data) {
-    await this.app.mysql.update('shop', {
-      data,
-    });
+  async update({ shopName, startOpeningHours, endOpeningHours, phone, address, location }) {
+    try {
+      const res = await this.app.mysql.update('shop', {
+        id: 1,
+        shopName, startOpeningHours, endOpeningHours, phone, address, location,
+      });
+      return res;
+    } catch (error) {
+      console.log('error :>> ', error);
+      throw error;
+    }
+
   }
 
 }
