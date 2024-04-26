@@ -92,6 +92,19 @@ class goodsController extends Controller {
       return;
     }
   }
+
+  async queryCateGoods() {
+    const { ctx } = this;
+    try {
+      const { isTakeout } = ctx.request.query;
+      const res = await ctx.service.goods.queryCateGoods(`${isTakeout}`);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
 }
 
 module.exports = goodsController;

@@ -3,9 +3,7 @@ const Service = require('egg').Service;
 class goodsService extends Service {
   async find(id) {
     const res = await this.app.mysql.get('goods', { id });
-    res.specs = await this.app.mysql.select('goods_spec', {
-      where: { goodsId: id },
-    });
+    res.specs = await this.app.mysql.select('goods_spec', { where: { goodsId: id } });
     return res;
   }
 
@@ -14,15 +12,11 @@ class goodsService extends Service {
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
 
     try {
-      const min = specs.reduce((pre, cur) => {
-        return pre.price < cur.price ? pre : cur;
-      });
       const { insertId: goodsId } = await conn.insert('goods', {
         categoryId,
         goodsName,
         img,
         intro,
-        minPrice: min.price,
         // 是否上架
         isShelves: 2,
         createUserName: this.ctx.username,
@@ -50,9 +44,6 @@ class goodsService extends Service {
 
   async update(data) {
     const { categoryId, goodsName, img, intro, specs, id } = data;
-    const min = specs.reduce((pre, cur) => {
-      return pre.price < cur.price ? pre : cur;
-    });
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
 
     try {
@@ -63,7 +54,6 @@ class goodsService extends Service {
         goodsName,
         img,
         intro,
-        minPrice: min.price,
       }); // 第一步操作
       await conn.delete('goods_spec', {
         goodsId: id,
@@ -88,14 +78,13 @@ class goodsService extends Service {
     }
   }
 
-  async findList({ goodsName }) {
-    let sql = 'SELECT * FROM goods WHERE isDelete = 0';
+  async findList({ openId }) {
+    let sql = 'SELECT * FROM `order` WHERE isDelete = 0';
     const params = [];
-    if (goodsName) {
-      sql = sql + ' AND goodsName like ?';
-      params.push(`%${goodsName}%`);
+    if (openId) {
+      sql = sql + ' AND openId = ?';
+      params.push(openId);
     }
-
 
     sql = sql + ' ORDER BY createTime DESC, updateTime DESC';
 
@@ -104,49 +93,21 @@ class goodsService extends Service {
   }
 
   async del(id) {
-    const res = await this.app.mysql.update('goods', {
-      id,
-      isDelete: 1,
-    });
-    return res;
-  }
-
-  async changeShelves(id, isShelves) {
-    const res = await this.app.mysql.update('goods', {
-      id,
-      isShelves,
-    });
-    return res;
-  }
-
-  async queryCateGoods(isTakeout) {
-    const sql = 'SELECT gc.id, gc.categoryName, g.id AS goodsId,g.goodsName AS goodsName, g.intro, g.img, g.minPrice '
-    + 'FROM goods_category gc '
-    + 'LEFT JOIN goods g ON gc.id = g.categoryId AND (g.id IS NOT NULL OR g.isDelete = 0) '
-    + 'WHERE gc.isDelete = 0 '
-    + ' AND gc.isTakeout like ? '
-    + 'ORDER BY gc.sort, gc.id, g.id;';
-    const rows = await this.app.mysql.query(sql, [ `%${isTakeout}%` ]);
-
-    const result = rows.reduce((acc, cur) => {
-      const { id, categoryName } = cur;
-      if (acc.length === 0 || acc[acc.length - 1].id !== id) {
-        acc.push({
-          id,
-          categoryName,
-          goods: [],
-        });
-      }
-      if (!cur.goodsId) {
-        return acc;
-      }
-      acc[acc.length - 1].goods.push({
-        ...cur,
+    const res = await this.app.mysql.update('goods',
+      {
+        id,
+        isDelete: 1,
       });
-      return acc;
-    }, []);
+    return res;
+  }
 
-    return result;
+  async changeStatus(id, status) {
+    const res = await this.app.mysql.update('goods',
+      {
+        id,
+        status,
+      });
+    return res;
   }
 }
 module.exports = goodsService;

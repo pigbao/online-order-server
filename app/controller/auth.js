@@ -8,7 +8,6 @@ class AuthController extends Controller {
     const { username, password } = ctx.request.body;
 
     const user = await ctx.service.user.findByPwd(username, password);
-    console.log('user :>> ', user);
     if (!user) {
       return this.error('用户名或密码错误！');
     }
