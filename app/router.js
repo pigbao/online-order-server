@@ -54,7 +54,11 @@ module.exports = app => {
   // router.get('/goods/del', middleware.jwt(), controller.goods.del);
   router.post('/order/status', middleware.jwt(), controller.order.status);
 
+  router.post('/wx/login', controller.auth.wxLogin);
+  router.get('/wx/banner/query', controller.banner.query);
   router.get('/wx/goods/query', controller.goods.queryCateGoods);
   router.post('/wx/cart/add', controller.cart.add);
   router.get('/wx/order/query', controller.order.queryByCustomer);
+  router.get('/wx/shop/query', controller.shop.detail);
+  router.get('/wx/shop/distance', controller.shop.distance);
 };

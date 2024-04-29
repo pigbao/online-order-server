@@ -135,6 +135,8 @@ class goodsService extends Service {
     + 'FROM goods_category gc '
     + 'LEFT JOIN goods g ON gc.id = g.categoryId AND (g.id IS NOT NULL OR g.isDelete = 0) '
     + 'WHERE gc.isDelete = 0 '
+    + ' AND g.isDelete = 0 '
+    + ' AND g.isShelves = 1 '
     + ' AND gc.isTakeout like ? '
     + 'ORDER BY gc.sort, gc.id, g.id;';
     const rows = await this.app.mysql.query(sql, [ `%${isTakeout}%` ]);
