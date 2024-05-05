@@ -9,8 +9,15 @@ class cartController extends Controller {
     const { ctx } = this;
     try {
       const params = ctx.request.body;
-      const res = await ctx.service.cart.insert({ ...params, openId: 1 });
-      this.success(res);
+      const goods = await ctx.service.cart.find({ goodsId: params.goodsId, specId: params.specId, openId: params.openId });
+      if (goods.length === 1) {
+        const res = await ctx.service.cart.update({ id: goods[0].id, count: (params.count + goods[0].count) });
+        this.success(res);
+      } else {
+        const res = await ctx.service.cart.insert({ ...params });
+        this.success(res);
+      }
+
     } catch (err) {
       ctx.logger.warn(err.errors);
       this.error(err);
@@ -33,8 +40,8 @@ class cartController extends Controller {
   async query() {
     const { ctx } = this;
     try {
-      const params = ctx.request.query;
-      const res = await ctx.service.cart.findList(params);
+      const { openId } = ctx.request.query;
+      const res = await ctx.service.cart.findList(openId);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -59,8 +66,21 @@ class cartController extends Controller {
   async del() {
     const { ctx } = this;
     try {
-      const { id } = ctx.request.query;
+      const { id } = ctx.request.body;
       const res = await ctx.service.cart.del(id);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
+
+  async clear() {
+    const { ctx } = this;
+    try {
+      const { openId } = ctx.request.body;
+      const res = await ctx.service.cart.clear(openId);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);

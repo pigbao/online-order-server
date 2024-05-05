@@ -25,14 +25,12 @@ class AuthController extends Controller {
   async wxLogin() {
     const { ctx } = this;
     const { code } = ctx.request.body;
-    console.log('code :>> ', code);
     const result = await ctx.curl(`https://api.weixin.qq.com/sns/jscode2session?appid=${wxConfig.appid}&secret=${wxConfig.appSecret}&js_code=${code}&grant_type=authorization_code`, {
       // 自动解析 JSON 响应
       dataType: 'json',
       // 3 秒超时
       timeout: 3000,
     });
-    console.log('result :>> ', result);
     const { openid } = result.data;
     const customer = await ctx.service.wxCustomer.findByOpenid(openid);
     if (customer) {

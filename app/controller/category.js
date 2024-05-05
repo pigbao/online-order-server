@@ -16,7 +16,6 @@ class categoryController extends Controller {
     const { ctx } = this;
     try {
       const params = ctx.request.body;
-      console.log('params :>> ', params);
       ctx.validate(createRule, params);
       const res = await ctx.service.category.insert(params);
       this.success(res);

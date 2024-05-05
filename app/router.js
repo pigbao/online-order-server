@@ -53,12 +53,29 @@ module.exports = app => {
   // router.get('/goods/detail', middleware.jwt(), controller.goods.detail);
   // router.get('/goods/del', middleware.jwt(), controller.goods.del);
   router.post('/order/status', middleware.jwt(), controller.order.status);
+  router.get('/order/query', middleware.jwt(), controller.order.query);
+  router.get('/order/detail', middleware.jwt(), controller.order.detail);
 
   router.post('/wx/login', controller.auth.wxLogin);
+
   router.get('/wx/banner/query', controller.banner.query);
+
   router.get('/wx/goods/query', controller.goods.queryCateGoods);
+  router.get('/wx/goods/detail', controller.goods.detail);
+
   router.post('/wx/cart/add', controller.cart.add);
+  router.post('/wx/cart/update', controller.cart.update);
+  router.post('/wx/cart/del', controller.cart.del);
+  router.get('/wx/cart/query', controller.cart.query);
+  router.post('/wx/cart/clear', controller.cart.clear);
+
+
+  router.post('/wx/order/add', controller.order.add);
   router.get('/wx/order/query', controller.order.queryByCustomer);
+  router.get('/wx/order/detail', controller.order.detail);
+  router.post('/wx/order/cancel', controller.order.cancel);
+  router.post('/wx/order/pay', controller.order.pay);
+
   router.get('/wx/shop/query', controller.shop.detail);
   router.get('/wx/shop/distance', controller.shop.distance);
 };

@@ -82,8 +82,6 @@ class goodsController extends Controller {
     const { ctx } = this;
     try {
       const { id, isShelves } = ctx.request.query;
-      console.log('id :>> ', id);
-      console.log('isShelves :>> ', isShelves);
       const res = await ctx.service.goods.changeShelves(id, isShelves);
       this.success(res);
     } catch (err) {
