@@ -40,8 +40,8 @@ class cartController extends Controller {
   async query() {
     const { ctx } = this;
     try {
-      const { openId } = ctx.request.query;
-      const res = await ctx.service.cart.findList(openId);
+      const { openId, isTakeout } = ctx.request.query;
+      const res = await ctx.service.cart.findList(openId, isTakeout);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -79,8 +79,8 @@ class cartController extends Controller {
   async clear() {
     const { ctx } = this;
     try {
-      const { openId } = ctx.request.body;
-      const res = await ctx.service.cart.clear(openId);
+      const { openId, isTakeout } = ctx.request.body;
+      const res = await ctx.service.cart.clear(openId, isTakeout);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);

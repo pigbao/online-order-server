@@ -50,7 +50,6 @@ class orderService extends Service {
         createUserName: this.ctx.username,
         createUserId: this.ctx.userId,
       });
-      console.log('orderId :>> ', orderId);
       for (let i = 0; i < cartList.length; i++) {
         await conn.insert('order_goods', {
           orderId,
@@ -66,7 +65,7 @@ class orderService extends Service {
           stock: cartList[i].stock - cartList[i].count,
         });
       }
-      await conn.delete('cart', { openId });
+      await conn.delete('cart', { openId, isTakeout });
       await conn.commit(); // 提交事务
       return { id: orderId, payPrice };
     } catch (err) {
