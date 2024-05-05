@@ -142,5 +142,64 @@ class orderService extends Service {
     const res = await this.app.mysql.query('SELECT * FROM `order` WHERE orderStatus = 1 AND isDelete = 0 AND createTime < DATE_SUB(NOW(), INTERVAL 10 MINUTE) ORDER BY createTime DESC;');
     return res;
   }
+
+  /**
+   * 统计今日订单
+   */
+  async todayCount() {
+    const res = await this.app.mysql.query('SELECT COUNT(*) AS total FROM `order` WHERE DATE(createTime) = DATE(NOW()) AND isDelete = 0 AND orderStatus = 4;');
+    return res[0].total;
+  }
+
+  /**
+   * 统计今日销售额
+   */
+  async todayPrice() {
+    const res = await this.app.mysql.query('SELECT SUM(payPrice) AS total FROM `order` WHERE DATE(createTime) = DATE(NOW()) AND isDelete = 0 AND orderStatus = 4;');
+    return res[0].total;
+  }
+
+  /**
+   * 统计昨日订单销售额
+   */
+  async yesterdayPrice() {
+    const res = await this.app.mysql.query('SELECT SUM(payPrice) AS total FROM `order` WHERE DATE(createTime) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND isDelete = 0 AND orderStatus = 4;');
+    return res[0].total;
+  }
+
+  /**
+   * 查询进行中订单 orderStatus = 2 | 3 |5
+   */
+  async afoot() {
+    console.log(1);
+    try {
+      const orders = await this.app.mysql.query('SELECT * FROM `order`  WHERE orderStatus = 2 OR orderStatus = 3 OR orderStatus = 5 AND isDelete = 0 ORDER BY createTime ASC;');
+      for (let i = 0; i < orders.length; i++) {
+        const goods = await this.app.mysql.select('order_goods', { where: { orderId: orders[i].id } });
+        orders[i].goods = goods;
+      }
+      return orders;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * 按日期查询 已完成订单总数
+   * @param date
+   */
+  async orderCountByDate(date) {
+    const res = await this.app.mysql.query(`SELECT COUNT(*) AS total FROM \`order\` WHERE DATE(createTime) = '${date}' AND isDelete = 0 AND orderStatus = 4;`);
+    return res[0].total;
+  }
+
+  /**
+   * 按日期查询 已完成订单销售额
+   * @param date
+   */
+  async orderPriceByDate(date) {
+    const res = await this.app.mysql.query(`SELECT SUM(payPrice) AS total FROM \`order\` WHERE DATE(createTime) = '${date}' AND isDelete = 0 AND orderStatus = 4;`);
+    return res[0].total;
+  }
 }
 module.exports = orderService;

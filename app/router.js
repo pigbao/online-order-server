@@ -56,6 +56,10 @@ module.exports = app => {
   router.get('/order/query', middleware.jwt(), controller.order.query);
   router.get('/order/detail', middleware.jwt(), controller.order.detail);
 
+  router.get('/statistic/orderCount', middleware.jwt(), controller.order.count);
+  router.get('/statistic/orderCountBy7Days', middleware.jwt(), controller.order.orderCountBy7Days);
+  router.get('/statistic/orderList', middleware.jwt(), controller.order.afoot);
+
   router.post('/wx/login', controller.auth.wxLogin);
 
   router.get('/wx/banner/query', controller.banner.query);
