@@ -91,8 +91,11 @@ class orderService extends Service {
     params.push((parseInt(pageNum) - 1) * pageSize);
     params.push(parseInt(pageSize));
     const orders = await app.mysql.query(sql, params);
-
-    return orders;
+    const total = await app.mysql.query('SELECT COUNT(*) AS total FROM `order` WHERE isDelete = 0');
+    return {
+      list: orders,
+      total: total[0].total,
+    };
 
   }
 

@@ -78,4 +78,10 @@ module.exports = app => {
 
   router.get('/wx/shop/query', controller.shop.detail);
   router.get('/wx/shop/distance', controller.shop.distance);
+
+  router.get('/wx/address/query', controller.address.query);
+  router.post('/wx/address/add', controller.address.add);
+  router.post('/wx/address/update', controller.address.update);
+  router.get('/wx/address/detail', controller.address.detail);
+  router.post('/wx/address/del', controller.address.del);
 };
