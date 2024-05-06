@@ -94,7 +94,6 @@ class goodsService extends Service {
       params.push(`%${goodsName}%`);
     }
 
-
     sql = sql + ' ORDER BY createTime DESC, updateTime DESC';
 
     const res = await this.app.mysql.query(sql, params);
@@ -105,8 +104,8 @@ class goodsService extends Service {
     const res = await this.app.mysql.select('goods', {
       where: { isDelete: 0 },
       orders: [
-        [ 'createTime', 'DESC' ],
-        [ 'updateTime', 'DESC' ],
+        ['createTime', 'DESC'],
+        ['updateTime', 'DESC'],
       ],
     });
     return res;
@@ -129,15 +128,16 @@ class goodsService extends Service {
   }
 
   async queryCateGoods(isTakeout) {
-    const sql = 'SELECT gc.id, gc.categoryName, g.id AS goodsId,g.goodsName AS goodsName, g.intro, g.img, g.minPrice '
-    + 'FROM goods_category gc '
-    + 'LEFT JOIN goods g ON gc.id = g.categoryId AND (g.id IS NOT NULL OR g.isDelete = 0) '
-    + 'WHERE gc.isDelete = 0 '
-    + ' AND g.isDelete = 0 '
-    + ' AND g.isShelves = 1 '
-    + ' AND gc.isTakeout like ? '
-    + 'ORDER BY gc.sort, gc.id, g.id;';
-    const rows = await this.app.mysql.query(sql, [ `%${isTakeout}%` ]);
+    const sql =
+      'SELECT gc.id, gc.categoryName, g.id AS goodsId,g.goodsName AS goodsName, g.intro, g.img, g.minPrice ' +
+      'FROM goods_category gc ' +
+      'LEFT JOIN goods g ON gc.id = g.categoryId AND (g.id IS NOT NULL OR g.isDelete = 0) ' +
+      'WHERE gc.isDelete = 0 ' +
+      ' AND g.isDelete = 0 ' +
+      ' AND g.isShelves = 1 ' +
+      ' AND gc.isTakeout like ? ' +
+      'ORDER BY gc.sort, gc.id, g.id;';
+    const rows = await this.app.mysql.query(sql, [`%${isTakeout}%`]);
 
     const result = rows.reduce((acc, cur) => {
       const { id, categoryName } = cur;
@@ -160,9 +160,12 @@ class goodsService extends Service {
     return result;
   }
 
-  async search(value) {
+  async search(value, isTakeout) {
     // 模糊搜索
-    const res = await this.app.mysql.query('SELECT * FROM goods WHERE goodsName LIKE ? AND isDelete = 0', [ `%${value}%` ]);
+    const res = await this.app.mysql.query(
+      'SELECT goods.id,goods.goodsName,goods.img,goods.minPrice,goods.intro FROM goods LEFT JOIN goods_category ON goods.categoryId = goods_category.id WHERE goods.goodsName LIKE ? AND goods.isDelete = 0 AND goods.isShelves = 1 AND goods_category.isTakeout LIKE ? ',
+      [`%${value}%`, `%${isTakeout}%`]
+    );
     return res;
   }
 }

@@ -11,7 +11,6 @@ const updateRule = {
 };
 
 class goodsController extends Controller {
-
   async add() {
     const { ctx } = this;
     try {
@@ -119,8 +118,8 @@ class goodsController extends Controller {
   async search() {
     const { ctx } = this;
     try {
-      const { value } = ctx.request.query;
-      const res = await ctx.service.goods.search(value);
+      const { value, isTakeout } = ctx.request.query;
+      const res = await ctx.service.goods.search(value, isTakeout);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);

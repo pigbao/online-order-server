@@ -6,7 +6,7 @@ class UserService extends Service {
     FROM users u
     JOIN roles r ON u.role = r.id
     WHERE u.id = ?;`;
-    const user = await this.app.mysql.query(sql, [ uid ]);
+    const user = await this.app.mysql.query(sql, [uid]);
     return user[0];
   }
   async findByPwd(username, password) {
@@ -19,7 +19,6 @@ class UserService extends Service {
   }
 
   async insert({ username, phone, avatar, password }) {
-
     const { insertId } = await this.app.mysql.insert('users', {
       username,
       phone,
@@ -31,9 +30,26 @@ class UserService extends Service {
 
     return { id: insertId };
   }
+  async update({ id, username, phone, avatar, password }) {
+    const user = await this.app.mysql.get('users', { id });
+    if (!user) {
+      return null;
+    }
+    const updateUser = {
+      id,
+      username,
+      phone,
+      avatar,
+      password,
+      updateTime: new Date(),
+    };
+    const result = await this.app.mysql.update('users', updateUser);
+    return result.affectedRows === 1;
+  }
 
   async findPage({ pageNum, pageSize, username, phone }) {
-    let sql = 'SELECT id, username, role, avatar,phone,createUserName,createUserId,createTime,updateTime FROM users WHERE isDelete = 0';
+    let sql =
+      'SELECT id, username, role, avatar,phone,createUserName,createUserId,createTime,updateTime FROM users WHERE isDelete = 0';
     const params = [];
     if (username) {
       sql = sql + ' AND username like ?';

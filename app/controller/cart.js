@@ -2,22 +2,29 @@
 
 const Controller = require('../core/base_controller');
 
-
 class cartController extends Controller {
-
   async add() {
     const { ctx } = this;
     try {
       const params = ctx.request.body;
-      const goods = await ctx.service.cart.find({ goodsId: params.goodsId, specId: params.specId, openId: params.openId });
+      console.log('params.isTakeout :>> ', params.isTakeout);
+      const goods = await ctx.service.cart.find({
+        goodsId: params.goodsId,
+        specId: params.specId,
+        openId: params.openId,
+        isTakeout: params.isTakeout,
+      });
+      console.log('goods :>> ', goods);
       if (goods.length === 1) {
-        const res = await ctx.service.cart.update({ id: goods[0].id, count: (params.count + goods[0].count) });
+        const res = await ctx.service.cart.update({
+          id: goods[0].id,
+          count: params.count + goods[0].count,
+        });
         this.success(res);
       } else {
         const res = await ctx.service.cart.insert({ ...params });
         this.success(res);
       }
-
     } catch (err) {
       ctx.logger.warn(err.errors);
       this.error(err);
@@ -88,7 +95,6 @@ class cartController extends Controller {
       return;
     }
   }
-
 }
 
 module.exports = cartController;

@@ -4,7 +4,6 @@ const Controller = require('../core/base_controller');
 
 const createRule = {
   username: { type: 'string', min: 2 },
-  phone: 'string',
   password: 'password',
 };
 
@@ -29,7 +28,20 @@ class UserController extends Controller {
       return;
     }
   }
-
+  // 更新用户
+  async update() {
+    const { ctx } = this;
+    try {
+      const params = ctx.request.body;
+      ctx.validate(createRule, params);
+      const res = await ctx.service.user.update(params);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
   async query() {
     const { ctx } = this;
     try {

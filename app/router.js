@@ -8,12 +8,15 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.post('/login', controller.auth.login);
 
-
   router.post('/upload', controller.upload.upload);
 
-
-  router.get('/user/getUserInfo', middleware.jwt(), controller.user.getUserInfo);
+  router.get(
+    '/user/getUserInfo',
+    middleware.jwt(),
+    controller.user.getUserInfo
+  );
   router.post('/user/add', middleware.jwt(), controller.user.add);
+  router.post('/user/update', middleware.jwt(), controller.user.update);
   router.get('/user/query', middleware.jwt(), controller.user.query);
   router.get('/user/detail', middleware.jwt(), controller.user.detail);
 
@@ -24,9 +27,21 @@ module.exports = app => {
   router.get('/role/all', middleware.jwt(), controller.role.all);
 
   router.post('/goods/category/add', middleware.jwt(), controller.category.add);
-  router.post('/goods/category/update', middleware.jwt(), controller.category.update);
-  router.get('/goods/category/query', middleware.jwt(), controller.category.query);
-  router.get('/goods/category/detail', middleware.jwt(), controller.category.detail);
+  router.post(
+    '/goods/category/update',
+    middleware.jwt(),
+    controller.category.update
+  );
+  router.get(
+    '/goods/category/query',
+    middleware.jwt(),
+    controller.category.query
+  );
+  router.get(
+    '/goods/category/detail',
+    middleware.jwt(),
+    controller.category.detail
+  );
   router.get('/goods/category/del', middleware.jwt(), controller.category.del);
 
   router.post('/goods/add', middleware.jwt(), controller.goods.add);
@@ -34,12 +49,15 @@ module.exports = app => {
   router.get('/goods/query', middleware.jwt(), controller.goods.query);
   router.get('/goods/detail', middleware.jwt(), controller.goods.detail);
   router.get('/goods/del', middleware.jwt(), controller.goods.del);
-  router.get('/goods/changeShelves', middleware.jwt(), controller.goods.changeShelves);
+  router.get(
+    '/goods/changeShelves',
+    middleware.jwt(),
+    controller.goods.changeShelves
+  );
   router.get('/goods/all', middleware.jwt(), controller.goods.allGoods);
 
   router.post('/shop/update', middleware.jwt(), controller.shop.update);
   router.get('/shop/detail', middleware.jwt(), controller.shop.detail);
-
 
   router.post('/banner/add', middleware.jwt(), controller.banner.add);
   router.post('/banner/update', middleware.jwt(), controller.banner.update);
@@ -57,7 +75,11 @@ module.exports = app => {
   router.get('/order/detail', middleware.jwt(), controller.order.detail);
 
   router.get('/statistic/orderCount', middleware.jwt(), controller.order.count);
-  router.get('/statistic/orderCountBy7Days', middleware.jwt(), controller.order.orderCountBy7Days);
+  router.get(
+    '/statistic/orderCountBy7Days',
+    middleware.jwt(),
+    controller.order.orderCountBy7Days
+  );
   router.get('/statistic/orderList', middleware.jwt(), controller.order.afoot);
 
   router.post('/wx/login', controller.auth.wxLogin);
@@ -73,7 +95,6 @@ module.exports = app => {
   router.post('/wx/cart/del', controller.cart.del);
   router.get('/wx/cart/query', controller.cart.query);
   router.post('/wx/cart/clear', controller.cart.clear);
-
 
   router.post('/wx/order/add', controller.order.add);
   router.get('/wx/order/query', controller.order.queryByCustomer);

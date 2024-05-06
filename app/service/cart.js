@@ -1,21 +1,22 @@
 // app/service/user.js
 const Service = require('egg').Service;
 class UserService extends Service {
-  async find({ specId, openId }) {
+  async find({ specId, openId, isTakeout }) {
     const result = await this.app.mysql.select('cart', {
-      where: { goodsSpecId: specId, openId },
+      where: { goodsSpecId: specId, openId, isTakeout },
     });
     return result;
   }
   async findList(openId, isTakeout) {
     console.log('isTakeout :>> ', isTakeout);
-    const sql = 'SELECT c.id,c.goodsId,c.count,c.goodsSpecId,c.isTakeout, gs.goodsName, gs.price, gs.stock,gs.spData,gs.originalPrice , g.img '
-    + 'FROM cart AS c  '
-    + 'JOIN goods_spec AS gs ON c.goodsSpecId = gs.id  '
-    + 'JOIN goods AS g ON c.goodsId = g.id  '
-    + 'WHERE c.openId = ?  '
-    + 'AND c.isTakeout = ?;';
-    const result = await this.app.mysql.query(sql, [ openId, isTakeout ]);
+    const sql =
+      'SELECT c.id,c.goodsId,c.count,c.goodsSpecId,c.isTakeout, gs.goodsName, gs.price, gs.stock,gs.spData,gs.originalPrice , g.img ' +
+      'FROM cart AS c  ' +
+      'JOIN goods_spec AS gs ON c.goodsSpecId = gs.id  ' +
+      'JOIN goods AS g ON c.goodsId = g.id  ' +
+      'WHERE c.openId = ?  ' +
+      'AND c.isTakeout = ?;';
+    const result = await this.app.mysql.query(sql, [openId, isTakeout]);
     return result;
   }
 
@@ -47,6 +48,5 @@ class UserService extends Service {
     const result = await this.app.mysql.delete('cart', { openId, isTakeout });
     return result;
   }
-
 }
 module.exports = UserService;
