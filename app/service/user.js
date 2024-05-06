@@ -2,9 +2,12 @@
 const Service = require('egg').Service;
 class UserService extends Service {
   async find(uid) {
-    // 假如我们拿到用户 id，从数据库获取用户详细信息
-    const user = await this.app.mysql.get('users', { id: uid });
-    return { user };
+    const sql = `SELECT u.*, r.roleName, r.menus, r.isDelete, r.createUserName, r.createUserId, r.createTime, r.updateTime
+    FROM users u
+    JOIN roles r ON u.role = r.id
+    WHERE u.id = ?;`;
+    const user = await this.app.mysql.query(sql, [ uid ]);
+    return user[0];
   }
   async findByPwd(username, password) {
     // 假如我们拿到用户 id，从数据库获取用户详细信息
@@ -30,7 +33,7 @@ class UserService extends Service {
   }
 
   async findPage({ pageNum, pageSize, username, phone }) {
-    let sql = 'SELECT id, username, roles, avatar,phone,createUserName,createUserId,createTime,updateTime FROM users WHERE isDelete = 0';
+    let sql = 'SELECT id, username, role, avatar,phone,createUserName,createUserId,createTime,updateTime FROM users WHERE isDelete = 0';
     const params = [];
     if (username) {
       sql = sql + ' AND username like ?';

@@ -11,7 +11,7 @@ const createRule = {
 class UserController extends Controller {
   async getUserInfo() {
     const { ctx } = this;
-    const res = ctx.service.user.find(ctx.userId);
+    const res = await ctx.service.user.find(ctx.userId);
     this.success(res);
   }
 
@@ -35,6 +35,19 @@ class UserController extends Controller {
     try {
       const params = ctx.request.query;
       const res = await ctx.service.user.findPage(params);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
+
+  async detail() {
+    const { ctx } = this;
+    try {
+      const { id } = ctx.request.query;
+      const res = await ctx.service.user.find(id);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
