@@ -8,9 +8,9 @@ class categoryService extends Service {
   }
 
   async insert(data) {
-    console.log('data :>> ', data);
     const { insertId } = await this.app.mysql.insert('goods_category', {
       ...data,
+      sort: 0,
       createUserName: this.ctx.username,
       createUserId: this.ctx.userId,
     });

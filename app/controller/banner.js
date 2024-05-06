@@ -3,21 +3,21 @@
 const Controller = require('../core/base_controller');
 
 const createRule = {
-  categoryName: { type: 'string', min: 2 },
+  url: { type: 'string', min: 2 },
 };
 
 const updateRule = {
   id: { type: 'number' },
 };
 
-class categoryController extends Controller {
+class bannerController extends Controller {
 
   async add() {
     const { ctx } = this;
     try {
       const params = ctx.request.body;
       ctx.validate(createRule, params);
-      const res = await ctx.service.category.insert(params);
+      const res = await ctx.service.banner.insert(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -30,7 +30,7 @@ class categoryController extends Controller {
     try {
       const params = ctx.request.body;
       ctx.validate(updateRule, params);
-      const res = await ctx.service.category.update(params);
+      const res = await ctx.service.banner.update(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -43,7 +43,7 @@ class categoryController extends Controller {
     const { ctx } = this;
     try {
       const params = ctx.request.query;
-      const res = await ctx.service.category.findList(params);
+      const res = await ctx.service.banner.findList(params);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -56,7 +56,7 @@ class categoryController extends Controller {
     const { ctx } = this;
     try {
       const { id } = ctx.request.query;
-      const res = await ctx.service.category.find(id);
+      const res = await ctx.service.banner.find(id);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -69,7 +69,7 @@ class categoryController extends Controller {
     const { ctx } = this;
     try {
       const { id } = ctx.request.query;
-      const res = await ctx.service.category.del(id);
+      const res = await ctx.service.banner.del(id);
       this.success(res);
     } catch (err) {
       ctx.logger.warn(err.errors);
@@ -77,6 +77,8 @@ class categoryController extends Controller {
       return;
     }
   }
+
+
 }
 
-module.exports = categoryController;
+module.exports = bannerController;
