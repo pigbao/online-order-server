@@ -159,5 +159,11 @@ class goodsService extends Service {
 
     return result;
   }
+
+  async search(value) {
+    // 模糊搜索
+    const res = await this.app.mysql.query('SELECT * FROM goods WHERE goodsName LIKE ? AND isDelete = 0', [ `%${value}%` ]);
+    return res;
+  }
 }
 module.exports = goodsService;

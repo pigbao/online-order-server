@@ -115,6 +115,19 @@ class goodsController extends Controller {
       return;
     }
   }
+
+  async search() {
+    const { ctx } = this;
+    try {
+      const { value } = ctx.request.query;
+      const res = await ctx.service.goods.search(value);
+      this.success(res);
+    } catch (err) {
+      ctx.logger.warn(err.errors);
+      this.error(err);
+      return;
+    }
+  }
 }
 
 module.exports = goodsController;

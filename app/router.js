@@ -66,6 +66,7 @@ module.exports = app => {
 
   router.get('/wx/goods/query', controller.goods.queryCateGoods);
   router.get('/wx/goods/detail', controller.goods.detail);
+  router.get('/wx/goods/search', controller.goods.search);
 
   router.post('/wx/cart/add', controller.cart.add);
   router.post('/wx/cart/update', controller.cart.update);
