@@ -13,5 +13,13 @@ class wxCustomerService extends Service {
     const res = await this.app.mysql.get('wx_customer', { id: insertId });
     return res;
   }
+
+  async update({ openId, ...data }) {
+    console.log('data :>> ', data);
+    const result = await this.app.mysql.update('wx_customer', data, {
+      where: { openId },
+    });
+    return result;
+  }
 }
 module.exports = wxCustomerService;

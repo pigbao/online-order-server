@@ -88,4 +88,6 @@ module.exports = app => {
   router.post('/wx/address/update', controller.address.update);
   router.get('/wx/address/detail', controller.address.detail);
   router.post('/wx/address/del', controller.address.del);
+
+  router.post('/wx/user/update', controller.wxCustomer.update);
 };

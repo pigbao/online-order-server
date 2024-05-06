@@ -12,7 +12,6 @@ class goodsService extends Service {
   async insert(data) {
     const { categoryId, goodsName, img, intro, specs } = data;
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
-
     try {
       const min = specs.reduce((pre, cur) => {
         return pre.price < cur.price ? pre : cur;
@@ -27,7 +26,7 @@ class goodsService extends Service {
         isShelves: 2,
         createUserName: this.ctx.username,
         createUserId: this.ctx.userId,
-      }); // 第一步操作
+      });
       for (let i = 0; i < specs.length; i++) {
         await conn.insert('goods_spec', {
           goodsId,
@@ -38,7 +37,6 @@ class goodsService extends Service {
           spData: specs[i].spData,
         });
       }
-
       await conn.commit(); // 提交事务
       return { id: goodsId };
     } catch (err) {
