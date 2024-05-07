@@ -3,19 +3,20 @@ const Service = require('egg').Service;
 const dayjs = require('dayjs');
 const { v4: uuidv4 } = require('uuid');
 class orderService extends Service {
-
   async generateCode() {
     const { app } = this;
     const today = dayjs().format('YYYY-MM-DD');
 
-    const res = await app.mysql.query('SELECT * FROM `order` WHERE DATE(createTime) = ? ORDER BY createTime DESC;', [ today ]);
+    const res = await app.mysql.query(
+      'SELECT * FROM `order` WHERE DATE(createTime) = ? ORDER BY createTime DESC;',
+      [today]
+    );
 
     if (res.length > 0) {
       return res[0].code + 1;
     }
     const newCode = 1;
     return newCode;
-
   }
 
   async find(id) {
@@ -25,15 +26,26 @@ class orderService extends Service {
 
   async findOne(id) {
     const order = await this.app.mysql.get('order', { id });
-    order.goods = await this.app.mysql.select('order_goods', { where: { orderId: id } });
+    order.goods = await this.app.mysql.select('order_goods', {
+      where: { orderId: id },
+    });
     return order;
   }
 
   async insert(data) {
-    const { isTakeout, cartList, remark, openId, code } = data;
+    const {
+      isTakeout,
+      cartList,
+      remark,
+      openId,
+      code,
+      address,
+      customerName,
+      customerPhone,
+      gender,
+    } = data;
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
     try {
-
       const orderNum = uuidv4();
       const payPrice = cartList.reduce((acc, cur) => {
         return acc + cur.price * cur.count;
@@ -49,6 +61,10 @@ class orderService extends Service {
         payPrice,
         createUserName: this.ctx.username,
         createUserId: this.ctx.userId,
+        address,
+        customerName,
+        customerPhone,
+        gender,
       });
       for (let i = 0; i < cartList.length; i++) {
         await conn.insert('order_goods', {
@@ -91,12 +107,13 @@ class orderService extends Service {
     params.push((parseInt(pageNum) - 1) * pageSize);
     params.push(parseInt(pageSize));
     const orders = await app.mysql.query(sql, params);
-    const total = await app.mysql.query('SELECT COUNT(*) AS total FROM `order` WHERE isDelete = 0');
+    const total = await app.mysql.query(
+      'SELECT COUNT(*) AS total FROM `order` WHERE isDelete = 0'
+    );
     return {
       list: orders,
       total: total[0].total,
     };
-
   }
 
   async findListByOpenId({ openId }) {
@@ -111,27 +128,27 @@ class orderService extends Service {
 
     const orders = await this.app.mysql.query(sql, params);
     for (let i = 0; i < orders.length; i++) {
-      const goods = await this.app.mysql.select('order_goods', { where: { orderId: orders[i].id } });
+      const goods = await this.app.mysql.select('order_goods', {
+        where: { orderId: orders[i].id },
+      });
       orders[i].goods = goods;
     }
     return orders;
   }
 
   async del(id) {
-    const res = await this.app.mysql.update('order',
-      {
-        id,
-        isDelete: 1,
-      });
+    const res = await this.app.mysql.update('order', {
+      id,
+      isDelete: 1,
+    });
     return res;
   }
 
   async changeStatus(id, orderStatus) {
-    const res = await this.app.mysql.update('order',
-      {
-        id,
-        orderStatus,
-      });
+    const res = await this.app.mysql.update('order', {
+      id,
+      orderStatus,
+    });
     return res;
   }
 
@@ -139,7 +156,9 @@ class orderService extends Service {
    * 查询10分钟前未支付的订单
    */
   async findUnPay() {
-    const res = await this.app.mysql.query('SELECT * FROM `order` WHERE orderStatus = 1 AND isDelete = 0 AND createTime < DATE_SUB(NOW(), INTERVAL 10 MINUTE) ORDER BY createTime DESC;');
+    const res = await this.app.mysql.query(
+      'SELECT * FROM `order` WHERE orderStatus = 1 AND isDelete = 0 AND createTime < DATE_SUB(NOW(), INTERVAL 10 MINUTE) ORDER BY createTime DESC;'
+    );
     return res;
   }
 
@@ -147,7 +166,9 @@ class orderService extends Service {
    * 统计今日订单
    */
   async todayCount() {
-    const res = await this.app.mysql.query('SELECT COUNT(*) AS total FROM `order` WHERE DATE(createTime) = DATE(NOW()) AND isDelete = 0 AND orderStatus = 4;');
+    const res = await this.app.mysql.query(
+      'SELECT COUNT(*) AS total FROM `order` WHERE DATE(createTime) = DATE(NOW()) AND isDelete = 0 AND orderStatus = 4;'
+    );
     return res[0].total;
   }
 
@@ -155,7 +176,9 @@ class orderService extends Service {
    * 统计今日销售额
    */
   async todayPrice() {
-    const res = await this.app.mysql.query('SELECT SUM(payPrice) AS total FROM `order` WHERE DATE(createTime) = DATE(NOW()) AND isDelete = 0 AND orderStatus = 4;');
+    const res = await this.app.mysql.query(
+      'SELECT SUM(payPrice) AS total FROM `order` WHERE DATE(createTime) = DATE(NOW()) AND isDelete = 0 AND orderStatus = 4;'
+    );
     return res[0].total;
   }
 
@@ -163,7 +186,9 @@ class orderService extends Service {
    * 统计昨日订单销售额
    */
   async yesterdayPrice() {
-    const res = await this.app.mysql.query('SELECT SUM(payPrice) AS total FROM `order` WHERE DATE(createTime) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND isDelete = 0 AND orderStatus = 4;');
+    const res = await this.app.mysql.query(
+      'SELECT SUM(payPrice) AS total FROM `order` WHERE DATE(createTime) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND isDelete = 0 AND orderStatus = 4;'
+    );
     return res[0].total;
   }
 
@@ -173,9 +198,13 @@ class orderService extends Service {
   async afoot() {
     console.log(1);
     try {
-      const orders = await this.app.mysql.query('SELECT * FROM `order`  WHERE orderStatus = 2 OR orderStatus = 3 OR orderStatus = 5 AND isDelete = 0 ORDER BY createTime ASC;');
+      const orders = await this.app.mysql.query(
+        'SELECT * FROM `order`  WHERE orderStatus = 2 OR orderStatus = 3 OR orderStatus = 5 AND isDelete = 0 ORDER BY createTime ASC;'
+      );
       for (let i = 0; i < orders.length; i++) {
-        const goods = await this.app.mysql.select('order_goods', { where: { orderId: orders[i].id } });
+        const goods = await this.app.mysql.select('order_goods', {
+          where: { orderId: orders[i].id },
+        });
         orders[i].goods = goods;
       }
       return orders;
@@ -189,7 +218,9 @@ class orderService extends Service {
    * @param date
    */
   async orderCountByDate(date) {
-    const res = await this.app.mysql.query(`SELECT COUNT(*) AS total FROM \`order\` WHERE DATE(createTime) = '${date}' AND isDelete = 0 AND orderStatus = 4;`);
+    const res = await this.app.mysql.query(
+      `SELECT COUNT(*) AS total FROM \`order\` WHERE DATE(createTime) = '${date}' AND isDelete = 0 AND orderStatus = 4;`
+    );
     return res[0].total;
   }
 
@@ -198,7 +229,9 @@ class orderService extends Service {
    * @param date
    */
   async orderPriceByDate(date) {
-    const res = await this.app.mysql.query(`SELECT SUM(payPrice) AS total FROM \`order\` WHERE DATE(createTime) = '${date}' AND isDelete = 0 AND orderStatus = 4;`);
+    const res = await this.app.mysql.query(
+      `SELECT SUM(payPrice) AS total FROM \`order\` WHERE DATE(createTime) = '${date}' AND isDelete = 0 AND orderStatus = 4;`
+    );
     return res[0].total;
   }
 }
