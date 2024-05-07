@@ -2,16 +2,10 @@
 
 const Controller = require('../core/base_controller');
 const dayjs = require('dayjs');
-// const createRule = {
-//   openId: { type: 'string', min: 2 },
-// };
 
-// const updateRule = {
-//   id: { type: 'number' },
-// };
-
+// 订单
 class orderController extends Controller {
-
+  // 添加订单
   async add() {
     const { ctx } = this;
     try {
@@ -26,8 +20,7 @@ class orderController extends Controller {
       return;
     }
   }
-
-
+  // 后台订单列表
   async query() {
     const { ctx } = this;
     try {
@@ -41,6 +34,7 @@ class orderController extends Controller {
     }
   }
 
+  // 小程序获取客户订单列表
   async queryByCustomer() {
     const { ctx } = this;
     try {
@@ -54,7 +48,7 @@ class orderController extends Controller {
     }
   }
 
-
+  // 订单状态修改
   async status() {
     const { ctx } = this;
     try {
@@ -68,6 +62,7 @@ class orderController extends Controller {
     }
   }
 
+  // 订单详情
   async detail() {
     const { ctx } = this;
     try {
@@ -81,6 +76,7 @@ class orderController extends Controller {
     }
   }
 
+  // 订单取消
   async cancel() {
     const { ctx } = this;
     try {
@@ -94,6 +90,7 @@ class orderController extends Controller {
     }
   }
 
+  // 订单支付
   async pay() {
     const { ctx } = this;
     try {
@@ -107,6 +104,7 @@ class orderController extends Controller {
     }
   }
 
+  // 后台首页 统计今日订单 销售额 昨日销售额
   async count() {
     const { ctx } = this;
     try {
@@ -119,6 +117,7 @@ class orderController extends Controller {
     }
   }
 
+  // 后台首页 7天订单统计 柱状图
   async orderCountBy7Days() {
     const { ctx } = this;
     try {
@@ -140,6 +139,7 @@ class orderController extends Controller {
     }
   }
 
+  // 后台首页 查询待付款订单
   async afoot() {
     const { ctx } = this;
     try {

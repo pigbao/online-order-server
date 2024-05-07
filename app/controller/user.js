@@ -6,8 +6,9 @@ const createRule = {
   username: { type: 'string', min: 2 },
   password: 'password',
 };
-
+// 管理员与员工
 class UserController extends Controller {
+  // 获取已登录的员工信息
   async getUserInfo() {
     const { ctx } = this;
     const res = await ctx.service.user.find(ctx.userId);
@@ -42,6 +43,7 @@ class UserController extends Controller {
       return;
     }
   }
+  // 查询用户
   async query() {
     const { ctx } = this;
     try {
@@ -54,7 +56,7 @@ class UserController extends Controller {
       return;
     }
   }
-
+  // 查询用户详情
   async detail() {
     const { ctx } = this;
     try {

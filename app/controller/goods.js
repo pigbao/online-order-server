@@ -9,8 +9,9 @@ const createRule = {
 const updateRule = {
   id: { type: 'number' },
 };
-
+// 商品控制器
 class goodsController extends Controller {
+  // 添加商品
   async add() {
     const { ctx } = this;
     try {
@@ -24,6 +25,7 @@ class goodsController extends Controller {
       return;
     }
   }
+  // 修改商品
   async update() {
     const { ctx } = this;
     try {
@@ -37,7 +39,7 @@ class goodsController extends Controller {
       return;
     }
   }
-
+  // 查询商品
   async query() {
     const { ctx } = this;
     try {
@@ -51,6 +53,7 @@ class goodsController extends Controller {
     }
   }
 
+  // 商品详情
   async detail() {
     const { ctx } = this;
     try {
@@ -63,7 +66,7 @@ class goodsController extends Controller {
       return;
     }
   }
-
+  // 删除商品
   async del() {
     const { ctx } = this;
     try {
@@ -77,6 +80,7 @@ class goodsController extends Controller {
     }
   }
 
+  // 修改商品上下架
   async changeShelves() {
     const { ctx } = this;
     try {
@@ -90,6 +94,7 @@ class goodsController extends Controller {
     }
   }
 
+  // 小程序查询分类下的商品
   async queryCateGoods() {
     const { ctx } = this;
     try {
@@ -103,6 +108,7 @@ class goodsController extends Controller {
     }
   }
 
+  // 查询所有商品
   async allGoods() {
     const { ctx } = this;
     try {
@@ -115,6 +121,7 @@ class goodsController extends Controller {
     }
   }
 
+  // 小程序搜索商品
   async search() {
     const { ctx } = this;
     try {

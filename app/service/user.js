@@ -1,6 +1,8 @@
 // app/service/user.js
 const Service = require('egg').Service;
+// 管理员与员工
 class UserService extends Service {
+  // 根据ID查询用户
   async find(uid) {
     const sql = `SELECT u.*, r.roleName, r.menus, r.isDelete, r.createUserName, r.createUserId, r.createTime, r.updateTime
     FROM users u
@@ -9,6 +11,8 @@ class UserService extends Service {
     const user = await this.app.mysql.query(sql, [uid]);
     return user[0];
   }
+
+  // 根据用户名密码查询用户
   async findByPwd(username, password) {
     // 假如我们拿到用户 id，从数据库获取用户详细信息
     const user = await this.app.mysql.get('users', {
@@ -17,7 +21,7 @@ class UserService extends Service {
     });
     return user;
   }
-
+  // 添加用户
   async insert({ username, phone, avatar, password }) {
     const { insertId } = await this.app.mysql.insert('users', {
       username,
@@ -30,6 +34,7 @@ class UserService extends Service {
 
     return { id: insertId };
   }
+  // 修改用户
   async update({ id, username, phone, avatar, password }) {
     const user = await this.app.mysql.get('users', { id });
     if (!user) {
@@ -46,7 +51,7 @@ class UserService extends Service {
     const result = await this.app.mysql.update('users', updateUser);
     return result.affectedRows === 1;
   }
-
+  // 分页查询用户列表
   async findPage({ pageNum, pageSize, username, phone }) {
     let sql =
       'SELECT id, username, role, avatar,phone,createUserName,createUserId,createTime,updateTime FROM users WHERE isDelete = 0';

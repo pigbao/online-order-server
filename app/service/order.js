@@ -2,7 +2,10 @@
 const Service = require('egg').Service;
 const dayjs = require('dayjs');
 const { v4: uuidv4 } = require('uuid');
+
+// 订单
 class orderService extends Service {
+  // 生成取餐码
   async generateCode() {
     const { app } = this;
     const today = dayjs().format('YYYY-MM-DD');
@@ -19,11 +22,13 @@ class orderService extends Service {
     return newCode;
   }
 
+  // 根据ID查询订单
   async find(id) {
     const res = await this.app.mysql.get('order', { id });
     return res;
   }
 
+  // 根据Id查询订单与订单商品
   async findOne(id) {
     const order = await this.app.mysql.get('order', { id });
     order.goods = await this.app.mysql.select('order_goods', {
@@ -32,6 +37,7 @@ class orderService extends Service {
     return order;
   }
 
+  // 添加订单
   async insert(data) {
     const {
       isTakeout,
@@ -46,11 +52,15 @@ class orderService extends Service {
     } = data;
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
     try {
+      // 生成订单编号
       const orderNum = uuidv4();
+
+      // 计算订单总价格
       const payPrice = cartList.reduce((acc, cur) => {
         return acc + cur.price * cur.count;
       }, 0);
 
+      // 插入订单表
       const { insertId: orderId } = await conn.insert('order', {
         isTakeout,
         orderNum,
@@ -67,6 +77,7 @@ class orderService extends Service {
         gender,
       });
       for (let i = 0; i < cartList.length; i++) {
+        // 插入订单商品表
         await conn.insert('order_goods', {
           orderId,
           goodsId: cartList[i].goodsId,
@@ -76,11 +87,13 @@ class orderService extends Service {
           goodsSpec: cartList[i].spData,
           count: cartList[i].count,
         });
+        // 更新商品库存
         await conn.update('goods_spec', {
           id: cartList[i].goodsSpecId,
           stock: cartList[i].stock - cartList[i].count,
         });
       }
+      // 清空购物车
       await conn.delete('cart', { openId, isTakeout });
       await conn.commit(); // 提交事务
       return { id: orderId, payPrice };
@@ -90,7 +103,7 @@ class orderService extends Service {
       throw err;
     }
   }
-
+  // 分页查询订单
   async findPage({ pageNum, pageSize, orderStatus, orderNum }) {
     const { app } = this;
     let sql = 'SELECT * FROM `order` WHERE isDelete = 0';
@@ -116,6 +129,7 @@ class orderService extends Service {
     };
   }
 
+  // 小程序根据OpenId 查询客户订单
   async findListByOpenId({ openId }) {
     let sql = 'SELECT * FROM `order` WHERE isDelete = 0';
     const params = [];
@@ -136,6 +150,7 @@ class orderService extends Service {
     return orders;
   }
 
+  // 删除订单
   async del(id) {
     const res = await this.app.mysql.update('order', {
       id,
@@ -144,6 +159,7 @@ class orderService extends Service {
     return res;
   }
 
+  // 修改订单状态
   async changeStatus(id, orderStatus) {
     const res = await this.app.mysql.update('order', {
       id,

@@ -9,9 +9,9 @@ const createRule = {
 const updateRule = {
   id: { type: 'number' },
 };
-
+//轮播图
 class bannerController extends Controller {
-
+  //添加轮播图
   async add() {
     const { ctx } = this;
     try {
@@ -25,6 +25,7 @@ class bannerController extends Controller {
       return;
     }
   }
+  //修改轮播图
   async update() {
     const { ctx } = this;
     try {
@@ -38,7 +39,7 @@ class bannerController extends Controller {
       return;
     }
   }
-
+  //查询轮播图
   async query() {
     const { ctx } = this;
     try {
@@ -51,7 +52,7 @@ class bannerController extends Controller {
       return;
     }
   }
-
+  //查询轮播图详情
   async detail() {
     const { ctx } = this;
     try {
@@ -64,7 +65,7 @@ class bannerController extends Controller {
       return;
     }
   }
-
+  //  删除轮播图
   async del() {
     const { ctx } = this;
     try {
@@ -77,8 +78,6 @@ class bannerController extends Controller {
       return;
     }
   }
-
-
 }
 
 module.exports = bannerController;

@@ -1,12 +1,16 @@
 // app/service/user.js
 const Service = require('egg').Service;
-class UserService extends Service {
+// 购物车
+class CartService extends Service {
+  // 根据商品规格ID OpenId 外卖自取字段 查询购物车
   async find({ specId, openId, isTakeout }) {
     const result = await this.app.mysql.select('cart', {
       where: { goodsSpecId: specId, openId, isTakeout },
     });
     return result;
   }
+
+  // 查询用户购物车列表
   async findList(openId, isTakeout) {
     console.log('isTakeout :>> ', isTakeout);
     const sql =
@@ -20,6 +24,7 @@ class UserService extends Service {
     return result;
   }
 
+  // 添加购物车
   async insert({ specId, count, goodsId, openId, isTakeout }) {
     const { insertId } = await this.app.mysql.insert('cart', {
       goodsSpecId: specId,
@@ -32,6 +37,7 @@ class UserService extends Service {
     return { id: insertId };
   }
 
+  // 修改购物车
   async update({ id, ...data }) {
     const result = await this.app.mysql.update('cart', data, {
       where: { id },
@@ -39,14 +45,15 @@ class UserService extends Service {
     return result;
   }
 
+  // 删除购物车
   async del(id) {
     const result = await this.app.mysql.delete('cart', { id });
     return result;
   }
-
+  // 清空购物车
   async clear(openId, isTakeout) {
     const result = await this.app.mysql.delete('cart', { openId, isTakeout });
     return result;
   }
 }
-module.exports = UserService;
+module.exports = CartService;

@@ -1,11 +1,14 @@
 'use strict';
 
 const Controller = require('../core/base_controller');
+// 微信配置
 const wxConfig = {
   appid: 'wx277cf4551d5c9c74',
   appSecret: '7748f147d9e56671d785f129c9bb1967',
 };
+// 身份验证
 class AuthController extends Controller {
+  // 员工登录
   async login() {
     const { ctx } = this;
     const { username, password } = ctx.request.body;
@@ -22,15 +25,19 @@ class AuthController extends Controller {
     return this.success(token);
   }
 
+  // 微信登录
   async wxLogin() {
     const { ctx } = this;
     const { code } = ctx.request.body;
-    const result = await ctx.curl(`https://api.weixin.qq.com/sns/jscode2session?appid=${wxConfig.appid}&secret=${wxConfig.appSecret}&js_code=${code}&grant_type=authorization_code`, {
-      // 自动解析 JSON 响应
-      dataType: 'json',
-      // 3 秒超时
-      timeout: 3000,
-    });
+    const result = await ctx.curl(
+      `https://api.weixin.qq.com/sns/jscode2session?appid=${wxConfig.appid}&secret=${wxConfig.appSecret}&js_code=${code}&grant_type=authorization_code`,
+      {
+        // 自动解析 JSON 响应
+        dataType: 'json',
+        // 3 秒超时
+        timeout: 3000,
+      }
+    );
     const { openid } = result.data;
     const customer = await ctx.service.wxCustomer.findByOpenid(openid);
     if (customer) {

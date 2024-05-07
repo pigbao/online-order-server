@@ -1,6 +1,9 @@
 // app/service/user.js
 const Service = require('egg').Service;
+
+// 商品
 class goodsService extends Service {
+  // 根据id查询商品
   async find(id) {
     const res = await this.app.mysql.get('goods', { id });
     res.specs = await this.app.mysql.select('goods_spec', {
@@ -9,13 +12,16 @@ class goodsService extends Service {
     return res;
   }
 
+  // 添加商品
   async insert(data) {
     const { categoryId, goodsName, img, intro, specs } = data;
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
     try {
+      // 获取规格中的最小金额
       const min = specs.reduce((pre, cur) => {
         return pre.price < cur.price ? pre : cur;
       });
+      // 插入商品表
       const { insertId: goodsId } = await conn.insert('goods', {
         categoryId,
         goodsName,
@@ -27,6 +33,7 @@ class goodsService extends Service {
         createUserName: this.ctx.username,
         createUserId: this.ctx.userId,
       });
+      // 插入规格表
       for (let i = 0; i < specs.length; i++) {
         await conn.insert('goods_spec', {
           goodsId,
@@ -45,7 +52,7 @@ class goodsService extends Service {
       throw err;
     }
   }
-
+  // 修改商品
   async update(data) {
     const { categoryId, goodsName, img, intro, specs, id } = data;
     const min = specs.reduce((pre, cur) => {
@@ -86,6 +93,7 @@ class goodsService extends Service {
     }
   }
 
+  // 查询商品列表
   async findList({ goodsName }) {
     let sql = 'SELECT * FROM goods WHERE isDelete = 0';
     const params = [];
@@ -100,6 +108,7 @@ class goodsService extends Service {
     return res;
   }
 
+  // 查询所有商品
   async findAll() {
     const res = await this.app.mysql.select('goods', {
       where: { isDelete: 0 },
@@ -111,6 +120,7 @@ class goodsService extends Service {
     return res;
   }
 
+  // 删除商品
   async del(id) {
     const res = await this.app.mysql.update('goods', {
       id,
@@ -119,6 +129,7 @@ class goodsService extends Service {
     return res;
   }
 
+  // 修改上下架状态
   async changeShelves(id, isShelves) {
     const res = await this.app.mysql.update('goods', {
       id,
@@ -127,6 +138,7 @@ class goodsService extends Service {
     return res;
   }
 
+  // 按分类查找商品
   async queryCateGoods(isTakeout) {
     const sql =
       'SELECT gc.id, gc.categoryName, g.id AS goodsId,g.goodsName AS goodsName, g.intro, g.img, g.minPrice ' +
@@ -160,6 +172,7 @@ class goodsService extends Service {
     return result;
   }
 
+  // 搜索
   async search(value, isTakeout) {
     // 模糊搜索
     const res = await this.app.mysql.query(

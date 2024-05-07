@@ -6,7 +6,9 @@ const updateRule = {
   shopName: { type: 'string', min: 2 },
 };
 
+// 店铺
 class shopController extends Controller {
+  // 修改
   async update() {
     const { ctx } = this;
     try {
@@ -21,6 +23,7 @@ class shopController extends Controller {
     }
   }
 
+  // 店铺详情
   async detail() {
     const { ctx } = this;
     try {
@@ -33,6 +36,7 @@ class shopController extends Controller {
     }
   }
 
+  // 小程序查询客户与店铺的距离
   async distance() {
     const { ctx } = this;
     const { from } = ctx.request.query;

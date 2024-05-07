@@ -1,27 +1,30 @@
 'use strict';
 
 const Controller = require('../core/base_controller');
-
+// 购物车
 class cartController extends Controller {
+  // 添加
   async add() {
     const { ctx } = this;
     try {
+      // 获取参数
       const params = ctx.request.body;
-      console.log('params.isTakeout :>> ', params.isTakeout);
+      // 查询购物车中是否已经存在商品
       const goods = await ctx.service.cart.find({
         goodsId: params.goodsId,
         specId: params.specId,
         openId: params.openId,
         isTakeout: params.isTakeout,
       });
-      console.log('goods :>> ', goods);
       if (goods.length === 1) {
+        // 如果存在商品 则将商品数量增加
         const res = await ctx.service.cart.update({
           id: goods[0].id,
           count: params.count + goods[0].count,
         });
         this.success(res);
       } else {
+        // 如果不存在商品 则添加新的商品
         const res = await ctx.service.cart.insert({ ...params });
         this.success(res);
       }
@@ -31,6 +34,7 @@ class cartController extends Controller {
       return;
     }
   }
+  // 修改购物车
   async update() {
     const { ctx } = this;
     try {
@@ -43,7 +47,7 @@ class cartController extends Controller {
       return;
     }
   }
-
+  // 查询购物车
   async query() {
     const { ctx } = this;
     try {
@@ -56,7 +60,7 @@ class cartController extends Controller {
       return;
     }
   }
-
+  // 购物车详情
   async detail() {
     const { ctx } = this;
     try {
@@ -69,7 +73,7 @@ class cartController extends Controller {
       return;
     }
   }
-
+  // 删除购物车
   async del() {
     const { ctx } = this;
     try {
@@ -82,7 +86,7 @@ class cartController extends Controller {
       return;
     }
   }
-
+  //   清空购物车
   async clear() {
     const { ctx } = this;
     try {

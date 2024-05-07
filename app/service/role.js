@@ -1,12 +1,14 @@
 // app/service/user.js
 const Service = require('egg').Service;
+// 角色
 class RoleService extends Service {
+  // 根据ID查询角色
   async find(id) {
-    // 假如我们拿到用户 id，从数据库获取用户详细信息
     const role = await this.app.mysql.get('roles', { id });
     return role;
   }
 
+  // 插入角色
   async insert({ roleName }) {
     const { insertId } = await this.app.mysql.insert('roles', {
       roleName,
@@ -18,11 +20,15 @@ class RoleService extends Service {
     return { id: insertId, menus: '' };
   }
 
+  // 更新角色
   async update(data) {
-    const res = await this.app.mysql.update('roles', { ...data, updateTime: new Date() });
+    const res = await this.app.mysql.update('roles', {
+      ...data,
+      updateTime: new Date(),
+    });
     return res;
   }
-
+  // 查询角色列表
   async findList({ roleName }) {
     let sql = 'SELECT * FROM roles WHERE isDelete = 0';
     const params = [];
@@ -37,6 +43,7 @@ class RoleService extends Service {
     return res;
   }
 
+  // 查询所有角色
   async findAll() {
     const res = await this.app.mysql.select('roles');
     return res;

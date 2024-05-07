@@ -10,8 +10,9 @@ const updateRule = {
   id: { type: 'number' },
 };
 
+// 角色
 class RoleController extends Controller {
-
+  // 添加角色
   async add() {
     const { ctx } = this;
     try {
@@ -25,6 +26,7 @@ class RoleController extends Controller {
       return;
     }
   }
+  // 修改角色
   async update() {
     const { ctx } = this;
     try {
@@ -38,7 +40,7 @@ class RoleController extends Controller {
       return;
     }
   }
-
+  // 查询角色
   async query() {
     const { ctx } = this;
     try {
@@ -51,7 +53,7 @@ class RoleController extends Controller {
       return;
     }
   }
-
+  // 查询角色详情
   async detail() {
     const { ctx } = this;
     try {
@@ -65,6 +67,7 @@ class RoleController extends Controller {
     }
   }
 
+  // 查询所有角色
   async all() {
     const { ctx } = this;
     try {

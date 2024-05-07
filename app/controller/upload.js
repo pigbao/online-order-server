@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const dayjs = require('dayjs');
 
+// 上传图片
 class UploadController extends Controller {
   async upload() {
     const { ctx } = this;
@@ -22,7 +23,6 @@ class UploadController extends Controller {
         fs.mkdirSync(dirname);
         return true;
       }
-
     }
 
     mkdirsSync(path.join(uplaodBasePath, dirname));

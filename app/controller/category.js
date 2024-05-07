@@ -9,9 +9,9 @@ const createRule = {
 const updateRule = {
   id: { type: 'number' },
 };
-
+// 商品分类
 class categoryController extends Controller {
-
+  // 添加分类
   async add() {
     const { ctx } = this;
     try {
@@ -25,6 +25,7 @@ class categoryController extends Controller {
       return;
     }
   }
+  // 修改分类
   async update() {
     const { ctx } = this;
     try {
@@ -39,6 +40,7 @@ class categoryController extends Controller {
     }
   }
 
+  // 查询分类
   async query() {
     const { ctx } = this;
     try {
@@ -51,7 +53,7 @@ class categoryController extends Controller {
       return;
     }
   }
-
+  // 查询分类详情
   async detail() {
     const { ctx } = this;
     try {
@@ -64,7 +66,7 @@ class categoryController extends Controller {
       return;
     }
   }
-
+  // 删除分类
   async del() {
     const { ctx } = this;
     try {
